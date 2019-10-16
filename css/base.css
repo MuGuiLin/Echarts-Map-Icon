@@ -1,0 +1,3 @@
+body{ background: url(../img/body-bg.jpg) no-repeat; background-size: cover;}
+.map-box{ border: 1px solid white;}
+#map-box{ margin: auto;}
