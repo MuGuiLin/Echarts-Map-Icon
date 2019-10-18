@@ -33,6 +33,24 @@
 
         // echarts.registerMap('wuhan', require('../map/wuhan.json'));
         oMap.setOption({
+            title: {
+                text: '中国 地理图形',
+                left: 'center',
+                textStyle: {
+                    color: 'white',
+                    fontStyle: 'normal',
+                    fontWeight: 'bold',
+                    fontSize: 32,
+                    lineHeight: 80,
+                    textBorderColor: 'green',
+                    textBorderWidth: 1,
+                    textShadowColor: 'green',
+                    textShadowBlur: 10,
+                    textShadowOffsetX: 2,
+                    textShadowOffsetY: 2
+                }
+            },
+
             // 提示框组件(可以设置在多种地方)       
             tooltip: {
                 show: true, //是否显示提示框组件，包括提示框浮层和 axisPointer。
@@ -47,7 +65,7 @@
                 },
                 padding: [0, 8],
                 hideDelay: 10,             //浮层隐藏的延迟
-                formatter: (o) => `<h3>建筑省份: ${o.name}</h3>`,
+                formatter: (o) => (o.data) ? `<div class="map-hover-box"><div class="map-hover-mov"><h3>建筑地址：${o.name}</h3></div><i></i></section>` : '',
                 backgroundColor: '#00a2e3',  //提示框浮层的背景颜色。
                 alwaysShowContent: true,
                 transitionDuration: 1,      //提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
@@ -73,7 +91,7 @@
                     }
                 }
             },
-
+           
             //系列列表。每个系列通过 type(map, scatter, bar, line, gauge, tree.....) 决定自己的图表类型
             series: [{
                 name: '自定义图标',
@@ -144,12 +162,16 @@
                     },
                 },
 
+                //自定义图片数组对象[{}, {}...]
             }, ...chinaData.map((item, index) => {
                 return {
                     type: "scatter",
                     coordinateSystem: "geo",
+                    //自定义图片的 位置（lng, lat）
                     data: [{ name: item.name, value: [item.lng, item.lat] }],
+                    //自定义图片的 大小
                     symbolSize: [80, 60],
+                    //自定义图片的 路径(注：必须以image://开头)
                     symbol: `image://img/icon/icon (${index}).png`
                 }
             })

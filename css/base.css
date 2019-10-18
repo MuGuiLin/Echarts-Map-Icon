@@ -1,3 +1,65 @@
-body{ background: url(../img/body-bg.jpg) no-repeat; background-size: cover;}
-.map-box{ border: 1px solid white;}
-#map-box{ margin: auto;}
+body {
+    background: url(../img/body-bg.jpg) no-repeat;
+    background-size: cover;
+}
+
+.map-box {
+    border: 1px solid white;
+}
+
+#map-box {
+    margin: auto;
+}
+
+.map-hover-box {
+    position: relative;
+    margin-top: -160px;
+    padding: 12px 16px;
+    min-width: 200px;
+    background: rgba(11, 21, 50, 0.8);
+    border-radius: 20px 0 20px 0;
+    box-shadow: 0 0 12px 1px #ec7d0f;
+    word-wrap: break-word;
+}
+
+.map-hover-box::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 73px;
+    height: 38px;
+    background: url(../img/map-href-rt.png) no-repeat;
+    background-size: contain;
+}
+
+.map-hover-box::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    width: 73px;
+    height: 38px;
+    background: url(../img/map-href-lb.png) no-repeat;
+    background-size: contain;
+}
+
+.map-hover-box h3 {
+    font-size: 18px;
+}
+
+.map-hover-box p {
+    padding-top: 12px;
+    font-size: 16px;
+}
+
+.map-hover-box i {
+    display: block;
+    position: absolute;
+    bottom: -108px;
+    left: -75px;
+    width: 100px;
+    height: 108px;
+    background: url(../img/map-href-zb.png) no-repeat;
+    background-size: contain;
+}
