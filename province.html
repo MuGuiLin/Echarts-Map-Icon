@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>贵州省遵义市习水县</title>
+    <title>贵州省</title>
     <link rel="stylesheet" href="./css/base.css">
 </head>
 
@@ -13,10 +13,16 @@
     <section class="map-box">
         <div id="map-box" style="width:1440px; height:916px"></div>
     </section>
+    <nav class="nav-box">
+        <a href="/index.html">中国</a>
+        <a href="/province.html">省份</a>
+        <a href="/city.html">城市</a>
+        <a href="/county.html">区县</a>
+    </nav>
 
     <script src="./js/echarts.min.js"></script>
-    <script src="./js/china.min.js"></script>
-    <script src="./js/xishui2.js"></script>
+    <script src="./js/guizhou.min.js"></script>
+    <script src="./js/guizho-data.js"></script>
 
     <script>
 
@@ -26,28 +32,28 @@
         //初始Echarts实例对象
         const oMap = echarts.init(document.querySelector('#map-box'));
 
-        //指定加载省、市、县、区（注：由于这里没有用模块化方式导入，所以把zunyi.json文件改为zunyi.js文件，并在里面用一个zunyi常量来引入的）
-        echarts.registerMap('xishui', xishui);
+        //指定加载省、市、县、区（注：由于这里没有用模块化方式导入，所以把guizhou.json文件改为guizhou.js文件，并在里面用一个guizhou常量来引入的）
+        echarts.registerMap('guizhou', guizhou);
 
         //如果当前支持模块化导入方式的话可以直接导入xxxx.json文件，就不用向上面改成js文件后用常量来引入
-        //echarts.registerMap('xishui', require('./js/xishui.json'));
+        //echarts.registerMap('guizhou', require('./js/guizhou.json'));
 
         //图片相关配置信息
         oMap.setOption({
             //标题文本配置
             title: {
-                text: '中国 贵州省 遵义市 习水县 地理图形',
+                text: '中国 贵州省 地理图形',
                 left: 'center',
                 textStyle: {
                     color: 'white',
                     fontStyle: 'normal',
                     fontWeight: 'bold',
-                    fontSize: 32,
-                    lineHeight: 80,
+                    fontSize: 36,
+                    lineHeight: 86,
                     textBorderColor: 'green',
                     textBorderWidth: 1,
-                    textShadowColor: 'green',
-                    textShadowBlur: 10,
+                    textShadowColor: 'white',
+                    textShadowBlur: 20,
                     textShadowOffsetX: 2,
                     textShadowOffsetY: 2
                 }
@@ -78,10 +84,10 @@
             //地理坐标系组件。地理坐标系组件用于地图的绘制，支持在地理坐标系上绘制散点图，线集。
             geo: {
                 show: true,
-                map: 'xishui',
+                map: 'guizhou',
                 roam: false,
                 top: 90,
-                left: 306,
+                left: 292,
                 zoom: 1.02,
                 aspectScale: 0.9,
                 itemStyle: {
@@ -97,16 +103,21 @@
 
             //系列列表。每个系列通过 type(map, scatter, bar, line, gauge, tree.....) 决定自己的图表类型
             series: [{
-                name: '贵州省遵义市习水县',
-                map: 'xishui',
+                name: '贵州省遵义市',
+                map: 'guizhou',
                 type: "scatter",
                 coordinateSystem: "geo",
                 symbolSize: 0,
                 silent: 'none',
-                data: []
+                data: guizhouData.map(item => {
+                    return {
+                        name: item.name,
+                        value: [item.lng, item.lat]
+                    };
+                })
             },
             {
-                map: 'xishui',
+                map: 'guizhou',
                 type: "map",
                 zoom: 1,                //当前视角的缩放比例。
                 aspectScale: 0.9,       //这个参数用于 scale 地图的长宽比。geoBoundingRect.width / geoBoundingRect.height * aspectScale
@@ -159,11 +170,39 @@
                         loop: true
                     },
                 },
-                
+
                 //自定义图片数组对象[{}, {}...]
-            }]
+            }, ...guizhouData.map((item, index) => {
+                return {
+                    type: "scatter",
+                    coordinateSystem: "geo",
+                    //自定义图片的 位置（lng, lat）
+                    data: [{ name: item.name, value: [item.lng, item.lat] }],
+                    //自定义图片的 大小
+                    symbolSize: [80, 60],
+                    //自定义图片的 路径
+                    symbol: `image://img/icon/icon (${index}).png`
+                }
+            })
+            ]
         });
 
+        //自动切换
+        const autoShow = (length) => {
+            nows = (nows + 1) % length;
+            oMap.dispatchAction({
+                type: 'showTip',
+                seriesIndex: 0,
+                dataIndex: nows
+            });
+        };
+
+        //每隔5秒钟自动切换到下一个数据点
+        autoShow(guizhouData.length);
+        clearInterval(timer);
+        timer = window.setInterval(() => {
+            autoShow(guizhouData.length);
+        }, 5000);
 
     </script>
 </body>
