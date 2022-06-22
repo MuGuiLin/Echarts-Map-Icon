@@ -14,10 +14,10 @@
         <div id="map-box" style="width:1440px; height:916px"></div>
     </section>
     <nav class="nav-box">
-        <a href="/index.html">中国</a>
-        <a href="/province.html">省份</a>  
-        <a href="/city.html">城市</a>
-        <a href="/county.html">区县</a>
+        <a href="/Echarts-Map-Icon/index.html">中国</a>
+        <a href="/Echarts-Map-Icon/province.html">省份</a>  
+        <a href="/Echarts-Map-Icon/city.html">城市</a>
+        <a href="/Echarts-Map-Icon/county.html">区县</a>
     </nav>
 
     <script src="./js/echarts.min.js"></script>
@@ -25,6 +25,10 @@
     <script src="./js/china-data.js"></script>
     <script>
 
+        //自动切换定时器， 自动切换项
+        let timer = null, nows = -1;
+
+        //初始Echarts实例对象
         const oMap = echarts.init(document.querySelector('#map-box'));
 
         // echarts.registerMap('wuhan', require('../map/wuhan.json'));
@@ -52,16 +56,22 @@
                 show: true, //是否显示提示框组件，包括提示框浮层和 axisPointer。
                 trigger: 'item', //触发类型。item,axis,none
                 enterable: true,//鼠标是否可进入提示框浮层中，默认为false，
-                showContent: true,          //是否显示提示框浮层
-                triggerOn: 'mousemove',//提示框触发的条件(mousemove|click|none)  
-                showDelay: 0,               //浮层显示的延迟，单位为 ms，默认没有延迟，也不建议设置。在 triggerOn 为 'mousemove' 时有效。
+                showContent: true,      //是否显示提示框浮层
+                triggerOn: 'mousemove', //提示框触发的条件(mousemove|click|none)  
+                showDelay: 200,         //浮层显示的延迟，单位为 ms，默认没有延迟，也不建议设置。在 triggerOn 为 'mousemove' 时有效。
                 textStyle: {
                     color: 'white',
                     fontSize: 12
                 },
                 padding: [0, 8],
                 hideDelay: 10,             //浮层隐藏的延迟
-                formatter: (o) => (o.data) ? `<div class="map-hover-box"><div class="map-hover-mov"><h3>建筑地址：${o.name}</h3></div><i></i></section>` : '',
+                // formatter: (o) => (o.data) ? `<div class="map-hover-box"><div class="map-hover-mov"><h3>建筑地址：${o.name}</h3></div><i></i></section>` : '',
+                formatter: (o) => {
+                    const userData = [{name: '江西省', num: 35}, {name: '贵州省', num:36}];
+                    for (let i = 0; i < userData.length; i++) {
+                        return (userData[i].name == o.name) ? `<div class="map-hover-box"><div class="map-hover-mov"><h3>建筑地址：${o.name}，用户数：${userData[i].num}</h3></div><i></i></section>` : `<div class="map-hover-box"><div class="map-hover-mov"><h3>建筑地址：${o.name}</h3></div><i></i></section>`;
+                    }
+                },
                 backgroundColor: '#00a2e3',  //提示框浮层的背景颜色。
                 alwaysShowContent: true,
                 transitionDuration: 1,      //提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
@@ -175,7 +185,7 @@
             ]
         });
 
-        let timer = null, nows = -1;
+        //自动切换
         const autoShow = (length) => {
             nows = (nows + 1) % length;
             oMap.dispatchAction({
@@ -185,11 +195,29 @@
             });
         };
 
+        //每隔5秒钟自动切换到下一个数据点
         autoShow(chinaData.length);
         clearInterval(timer);
         timer = window.setInterval(() => {
             autoShow(chinaData.length);
         }, 5000);
+
+        // 点击事件
+        oMap.on('click', function (res) {
+            console.log(res);
+            if('scatter' === res.componentSubType){
+                alert(`点击了 ${res.name} 图标`);
+            }
+            if('map' === res.componentSubType){
+                alert(`点击了 ${res.name} 地图`);
+            }
+        });
+        
+        // 自适应屏幕
+        // window.addEventListener("resize",function(){
+        //     console.log(oMap)
+        //     oMap.resize(); 
+        // });
 
     </script>
 </body>
