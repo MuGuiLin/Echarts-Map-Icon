@@ -6,7 +6,7 @@
 
 ### 例实效果:
 
-[https://muguilin.github.io/Echarts-Map-Icon](https://muguilin.github.io/Echarts-Map-Icon)
+[https://demo.muguilin.com/Echarts-Map-Icon](https://demo.muguilin.com/Echarts-Map-Icon)
 
 ### 使用方法:
 
